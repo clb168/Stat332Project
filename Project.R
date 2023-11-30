@@ -1,7 +1,7 @@
 
 library(plotly)
 library(ggplot2)
-
+library(TTR)
 # Read CSV file
 my_data <- read.csv("/Users/cburh/Documents/Assignments_Fall2023/Stat_332/Project/SBUX_1yr.csv")
 
@@ -20,3 +20,6 @@ ggplot(my_dataframe, aes(x = Time, y = Value)) +
   xlab("\n Date") +
   ylab("Price in dollars \n")
 
+decomp_data = SMA(my_dataframe, n=10)
+plot.ts(decomp_data)
+print(decomp_data)
