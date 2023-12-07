@@ -26,14 +26,6 @@ print(decomp_data)
 #partial auto correlation
 acf(my_dataframe, type = c("partial"), plot = TRUE)
 
-###### what I've tried
-# Read CSV file
-SBUX_data <- read.csv("C:/STAT 332/project/SBUX_yearly.csv")
 
-# Convert the date column to Date type
-SBUX_data[,1] <- as.Date(SBUX_data[,1], format="%m/%d/%Y")
-
-# Create a data frame with the desired columns
-SBUX_df <- data.frame(Date = SBUX_data[,1], Open = SBUX_data[,2])
 
 
