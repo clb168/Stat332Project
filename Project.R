@@ -34,6 +34,7 @@ acf(my_dataframe, type = c("partial"), plot = TRUE)
 #mean squared error
 
 
+<<<<<<< HEAD
 #ARIMA plot
 
 
@@ -74,3 +75,6 @@ for (i in 1:length(month)){
 }
 
 print(monthly_avg)
+=======
+
+>>>>>>> 5ef007d6680286e95f3a80d5bb21ccf4d0af4a48
