@@ -88,7 +88,23 @@ for (i in 1:length(month)){
 print(monthly_avg)
 print(month_year)
 
-my_dataframe <- data.frame(Time = month_year, Value = monthly_avg)
+month_yearRev = rev(month_year)
+month_avgRev = rev(monthly_avg)
+my_dataframe <- data.frame(Time = month_yearRev, Value = month_avgRev)
 print(my_dataframe)
+#time series plus decomposition plots
+tsPlot = ts(my_dataframe[,2], frequency = 12)
+plot(tsPlot)
+decomp=decompose(tsPlot, type=c("multiplicative"))
+plot(decomp)
 
-t
+training_set <- my_dataframe[1:100, ]  # First 100 rows for training
+testing_set <- my_dataframe[101:120, ]
+
+print(training_set)
+print(testing_set)
+
+
+
+
+
