@@ -34,7 +34,6 @@ acf(my_dataframe, type = c("partial"), plot = TRUE)
 #mean squared error
 
 
-<<<<<<< HEAD
 #ARIMA plot
 
 
@@ -42,10 +41,13 @@ acf(my_dataframe, type = c("partial"), plot = TRUE)
 my_data <- read.csv("/Users/cburh/Documents/Assignments_Fall2023/Stat_332/Project/SBUX.csv")
 Open_ts = ts(my_data[,1], frequency = 1)
 
-monthly_avg = array(0, dim = c(500))
+monthly_avg = array(0, dim = c(120))
 month=month(mdy(my_data[,1]))
 # Extract the 4th column
 column_data <- my_data[, 4]
+
+month_year = array(" ", dim = c(120))
+year=year(mdy(my_data[,1]))
 
 # Remove the dollar sign and convert to numeric
 numeric_data <- as.numeric(sub("\\$", "", column_data))
@@ -67,6 +69,7 @@ for (i in 1:length(month)){
   }
   else if (month[i] != month[i-1]) {
     monthly_avg[j] = monthly_avg[j]/month_iter
+    month_year[j] <- paste0("", month[i-1], "/", year[i-1], "")
     month_iter = 1
     j = j+1
     print(j)
@@ -75,6 +78,7 @@ for (i in 1:length(month)){
 }
 
 print(monthly_avg)
-=======
+print(month_year)
 
->>>>>>> 5ef007d6680286e95f3a80d5bb21ccf4d0af4a48
+my_dataframe <- data.frame(Time = month_year, Value = monthly_avg)
+print(my_dataframe)
