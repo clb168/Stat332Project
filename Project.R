@@ -37,15 +37,16 @@ library(forecast)
 #mean squared error
 
 #montly averages
-my_data <- read.csv("Stat332Project/SBUX.csv")
+my_data <- read.csv("/Users/cburh/Documents/Assignments_Fall2023/Stat_332/Project/SBUX.csv")
 Open_ts = ts(my_data[,1], frequency = 1)
 
-monthly_avg = array(0, dim = c(120))
+monthly_avg = array(0, dim = c(529))
 month=month(mdy(my_data[,1]))
 # Extract the 4th column
 column_data <- my_data[, 4]
 
-month_year = array(" ", dim = c(120))
+week=week(mdy(my_data[,1]))
+month_year = array(" ", dim = c(529))
 year=year(mdy(my_data[,1]))
 #month_year[120] = "12/2013"
 # Remove the dollar sign and convert to numeric
@@ -62,18 +63,20 @@ for (i in 1:length(month)){
     #print(monthly_avg[j])
     
   }
-  else if (month[i] == month[i-1]){
+  #changing this to weekly - to change back to monthly just use month[] instead of week[]
+  else if (week[i] == week[i-1]){
     monthly_avg[j] = monthly_avg[j] + numeric_data[i]
     #print(monthly_avg[j])
     month_iter = month_iter + 1
     if (i==length(month)){
       monthly_avg[j] = monthly_avg[j]/month_iter
-      month_year[j] <- paste0("", month[i], "/", year[i], "")
+      month_year[j] <- paste0("", week[i], "/", year[i], "")
     }
   }
-  else if (month[i] != month[i-1]) {
+  #changed to weekly - to change bach to monthly use month[]
+  else if (week[i] != week[i-1]) {
     monthly_avg[j] = monthly_avg[j]/month_iter
-    month_year[j] <- paste0("", month[i-1], "/", year[i-1], "")
+    month_year[j] <- paste0("", week[i-1], "/", year[i-1], "")
     month_iter = 1
     j = j+1
     print(j)
@@ -81,12 +84,15 @@ for (i in 1:length(month)){
   }
   
 }
+#HARDCODING this in 
+week[529] = '48/2013'
 
 
 
 print(monthly_avg)
 print(month_year)
 
+ 
 month_yearRev = rev(month_year)
 month_avgRev = rev(monthly_avg)
 my_dataframe <- data.frame(Time = month_yearRev, Value = month_avgRev)
@@ -115,8 +121,8 @@ Box.test(tsPlot,lag=5,type = "Box-Pierce")
 SBX_seasonal = as.vector(decomp$seasonal)
 #print(SBX_seasonal)
 
-train = SBX_seasonal[1:100]
-test = SBX_seasonal[101:120]
+train = SBX_seasonal[1:450]
+test = SBX_seasonal[451:529]
 print(test)
 print(train)
 
@@ -128,15 +134,15 @@ TrainPgram = LSTS::periodogram(Training)
 TrainPgram$plot
 
 # which ARIMA plot should we use?
-result <- auto.arima(monthly_avg,seasonal= TRUE)
+result <- auto.arima(month_avgRev,seasonal= TRUE)
 print(result)
 #ARIMA (0,1,1 plot)
-arima1<- arima(monthly_avg, order=c(0,1,1))
+arima1<- arima(month_avgRev, order=c(0,1,1))
 checkresiduals(arima1)
 # lets do another but with a seasonal model
-arima2<-arima(monthly_avg, order=c(0,1,1), seasonal=c(0,1,1))
+arima2<-arima(month_avgRev, order=c(0,1,1), seasonal=c(0,1,1))
 checkresiduals(arima2)
-plot(forecast(arima2,h=12))
+plot(forecast(arima2,h=20))
 
 
 ######### Gage stuff
@@ -166,6 +172,7 @@ pacf((my_data_ts-mean(my_data_ts))^2)
 acf(my_data_ts, lag.max=40)
 pacf(my_data_ts)
 
+week=week(mdy(my_data[,1]))
 
 
 
