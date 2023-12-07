@@ -136,6 +136,7 @@ checkresiduals(arima1)
 # lets do another but with a seasonal model
 arima2<-arima(monthly_avg, order=c(0,1,1), seasonal=c(0,1,1))
 checkresiduals(arima2)
+plot(forecast(arima2,h=12))
 
 
 ######### Gage stuff
