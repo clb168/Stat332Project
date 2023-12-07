@@ -2,6 +2,9 @@
 library(plotly)
 library(ggplot2)
 library(TTR)
+library(lubridate)
+library(tseries)
+library(forecast)
 # Read CSV file
 #my_data <- read.csv("/Users/cburh/Documents/Assignments_Fall2023/Stat_332/Project/SBUX.csv")
 
@@ -33,12 +36,8 @@ library(TTR)
 
 #mean squared error
 
-
-#ARIMA plot
-
-
 #montly averages
-my_data <- read.csv("/Users/cburh/Documents/Assignments_Fall2023/Stat_332/Project/SBUX.csv")
+my_data <- read.csv("Stat332Project/SBUX.csv")
 Open_ts = ts(my_data[,1], frequency = 1)
 
 monthly_avg = array(0, dim = c(120))
@@ -127,6 +126,16 @@ require(LSTS)
 
 TrainPgram = LSTS::periodogram(Training)
 TrainPgram$plot
+
+# which ARIMA plot should we use?
+result <- auto.arima(monthly_avg,seasonal= TRUE)
+print(result)
+#ARIMA (0,1,1 plot)
+arima1<- arima(monthly_avg, order=c(0,1,1))
+checkresiduals(arima1)
+# lets do another but with a seasonal model
+arima2<-arima(monthly_avg, order=c(0,1,1), seasonal=c(0,1,1))
+checkresiduals(arima2)
 
 
 ######### Gage stuff
