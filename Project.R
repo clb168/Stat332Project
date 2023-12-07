@@ -98,12 +98,35 @@ plot(tsPlot)
 decomp=decompose(tsPlot, type=c("multiplicative"))
 plot(decomp)
 
-training_set <- my_dataframe[1:100, ]  # First 100 rows for training
-testing_set <- my_dataframe[101:120, ]
+#training_set <- my_dataframe[1:100, ]  # First 100 rows for training
+#testing_set <- my_dataframe[101:120, ]
 
-print(training_set)
-print(testing_set)
+#print(training_set)
+#print(testing_set)
 
+#ACF and partial ACF
+acf(my_dataframe, type = c("partial"), plot = TRUE)
+acf(my_dataframe, type = c("correlation"), plot = TRUE)
+
+#BoxTest
+Box.test(tsPlot,lag=5,type = "Ljung-Box")
+Box.test(tsPlot,lag=5,type = "Box-Pierce")
+
+#fft stuff and splitting dataset for periodigram
+SBX_seasonal = as.vector(decomp$seasonal)
+#print(SBX_seasonal)
+
+train = SBX_seasonal[1:100]
+test = SBX_seasonal[101:120]
+print(test)
+print(train)
+
+Training = fft(train)
+require(LSTS)
+
+
+TrainPgram = LSTS::periodogram(Training)
+TrainPgram$plot
 
 
 
