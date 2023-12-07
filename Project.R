@@ -109,9 +109,16 @@ plot(decomp)
 #print(training_set)
 #print(testing_set)
 
-#ACF and partial ACF
-acf(my_dataframe, type = c("partial"), plot = TRUE)
-acf(my_dataframe, type = c("correlation"), plot = TRUE)
+
+#ACF and PACF of Time Series
+acf(tsPlot)
+pacf(tsPlot)
+
+#Mean Square Error
+acf((tsPlot-mean(tsPlot))^2)
+pacf((tsPlot-mean(tsPlot))^2)
+acf(tsPlot, lag.max=40)
+pacf(tsPlot)
 
 #BoxTest
 Box.test(tsPlot,lag=5,type = "Ljung-Box")
@@ -121,14 +128,13 @@ Box.test(tsPlot,lag=5,type = "Box-Pierce")
 SBX_seasonal = as.vector(decomp$seasonal)
 #print(SBX_seasonal)
 
-train = SBX_seasonal[1:450]
-test = SBX_seasonal[451:529]
+train = SBX_seasonal[1:370]
+test = SBX_seasonal[371:529]
 print(test)
 print(train)
 
 Training = fft(train)
 require(LSTS)
-
 
 TrainPgram = LSTS::periodogram(Training)
 TrainPgram$plot
@@ -162,17 +168,9 @@ ntesting_set <- my_dataframe[1:20, ]
 
 
 
-#ACF and PACF of Time Series
-acf(my_data_ts)
-pacf(my_data_ts)
 
-#Mean Square Error
-acf((my_data_ts-mean(my_data_ts))^2)
-pacf((my_data_ts-mean(my_data_ts))^2)
-acf(my_data_ts, lag.max=40)
-pacf(my_data_ts)
 
-week=week(mdy(my_data[,1]))
+
 
 
 
