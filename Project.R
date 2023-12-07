@@ -129,5 +129,34 @@ TrainPgram = LSTS::periodogram(Training)
 TrainPgram$plot
 
 
+######### Gage stuff
+#Stationarity Test
+adf.test(my_data$Open)
+
+
+#Trend Dcmp
+data_seasonal = as.vector(decomp$seasonal)
+data_trend = as.vector(decomp$trend)
+
+
+#Training and Testing Sets
+ntraining_set <- my_dataframe[21:120, ] 
+ytraining_set = data_trend[]
+ntesting_set <- my_dataframe[1:20, ]
+
+
+
+#ACF and PACF of Time Series
+acf(my_data_ts)
+pacf(my_data_ts)
+
+#Mean Square Error
+acf((my_data_ts-mean(my_data_ts))^2)
+pacf((my_data_ts-mean(my_data_ts))^2)
+acf(my_data_ts, lag.max=40)
+pacf(my_data_ts)
+
+
+
 
 
