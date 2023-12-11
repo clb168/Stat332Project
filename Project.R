@@ -82,16 +82,17 @@ require(LSTS)
 TrainPgram <- LSTS::periodogram(Training)
 TrainPgram$plot
 
-# use auto ARIMA to figure out which ARIMA to use.
-result <- auto.arima(month_avgRev,seasonal= TRUE)
-print(result)
-#ARIMA (0,1,1 plot)
-arima1<- arima(month_avgRev, order=c(0,1,1))
-checkresiduals(arima1)
-# lets do another but with a seasonal model
-arima2<-arima(month_avgRev, order=c(0,1,1), seasonal=c(0,1,1))
-checkresiduals(arima2)
-plot(forecast(arima2,h=20))
+# # use auto ARIMA to figure out which ARIMA to use.
+# result <- auto.arima(month_avgRev,seasonal= TRUE)
+# print(result)
+# 
+# #ARIMA (0,1,1 plot)
+# arima1<- arima(month_avgRev, order=c(0,1,1))
+# checkresiduals(arima1)
+# # lets do another but with a seasonal model
+# arima2<-arima(month_avgRev, order=c(0,1,1), seasonal=c(0,1,1))
+# checkresiduals(arima2)
+# plot(forecast(arima2,h=20))
 
 # Stationary Test
 adftest <- adf.test(month_avgRev)
@@ -107,9 +108,45 @@ print(adftest_diff)
 # adftest_diff2 <- adf.test(diff(diff(monthly_avg)))
 # print(adftest_diff2)
 # 
-# #taking log of data
-# adftest_log <- adf.test(log(monthly_avg))
-# print(adftest_diff2)
+#taking log of data
+adftest_log <- adf.test(log(month_avgRev))
+print(adftest_diff2)
+
+#get best arima
+get.best.arima = function(x.ts, maxord = c(1,1,1,1,1,1)){
+  best.aic = 1e8
+  n = length(x.ts)
+  for (p in 0:maxord[1]) for(d in 0:maxord[2]) for(q in 0:maxord[3])
+    for (P in 0:maxord[4]) for(D in 0:maxord[5]) for(Q in 0:maxord[6]){
+      fit = arima(x.ts, order = c(p,d,q),
+                  seas = list(order = c(P,D,Q),
+                              frequency(x.ts)), method = "CSS")
+      fit.aic = -2 * fit$loglik + (log(n) + 1) * length(fit$coef)
+      if (fit.aic < best.aic){
+        best.aic = fit.aic
+        best.fit = fit
+        best.model = c(p,d,q,P,D,Q)
+      }
+    }
+  list(best.aic, best.fit, best.model)
+}
+#get best of entire dataset
+get.best.arima(tsPlot)
+
+#splitting into test and training
+ntraining_set <- my_dataframe[21:120, ] 
+ntesting_set <- my_dataframe[1:20, ]
+#get best of training
+ts_training <- ts(ntraining_set[,2], frequency = 12)
+get.best.arima(ts_training)
+
+
+
+
+
+
+
+
 
 
 
@@ -121,5 +158,5 @@ data_trend = as.vector(decomp$trend)
 
 #Training and Testing Sets
 ntraining_set <- my_dataframe[21:120, ] 
-ytraining_set <- data_trend[]
+
 ntesting_set <- my_dataframe[1:20, ]
