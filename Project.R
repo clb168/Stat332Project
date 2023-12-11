@@ -126,13 +126,7 @@ get.best.garch = function(x.ts, maxord = c(1,1)){
 SBUX_best_garch = get.best.garch(tsPlot, maxord = c(1,2))
 acf(SBUX_best_garch[[4]]^2)
 
-#second order
-# adftest_diff2 <- adf.test(diff(diff(monthly_avg)))
-# print(adftest_diff2)
-# 
-#taking log of data
-adftest_log <- adf.test(log(month_avgRev))
-print(adftest_diff2)
+
 
 #get best arima
 get.best.arima = function(x.ts, maxord = c(1,1,1,1,1,1)){
@@ -162,7 +156,14 @@ ntesting_set <- my_dataframe[1:20, ]
 ts_training <- ts(ntraining_set[,2], frequency = 12)
 get.best.arima(ts_training)
 
-
+#plotting arima
+#ARIMA (0,1,1 plot)
+arima1<- arima(ts_training, order=c(0,1,1))
+checkresiduals(arima1)
+# lets do another but with a seasonal model
+arima2<-arima(ts_training, order=c(0,1,1), seasonal=c(0,1,1))
+checkresiduals(arima2)
+plot(forecast(arima2,h=20))
 
 
 
