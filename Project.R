@@ -14,7 +14,7 @@ library(forecast)
 # test hypotheses to validate stationarity, estimate model parameters
 
 #montly averages
-my_data <- read.csv("Stat332Project/SBUX.csv")
+my_data <- read.csv("SBUX.csv")
 Open_ts <- ts(my_data[, 1], frequency = 1)
 
 monthly_avg <- array(0, dim = c(529))
@@ -23,45 +23,35 @@ month <- month(mdy(my_data[, 1]))
 column_data <- my_data[, 4]
 
 week <- week(mdy(my_data[, 1]))
-month_year <- array(" ", dim = c(529))
+month_year <- array(" ", dim = c(120))
 year <- year(mdy(my_data[,1]))
-#month_year[120] = "12/2013"
 # Remove the dollar sign and convert to numeric
 numeric_data <- as.numeric(sub("\\$", "", column_data))
-#print(month)
-temp <- 5
 j <- 1
 
 month_iter <- 1
 for (i in 1:length(month)){
-  #print(i)
   if (i==1){
     monthly_avg[j] <- numeric_data[1]
-    #print(monthly_avg[j])
-    
   }
   #changing this to weekly - to change back to monthly just use month[] instead of week[]
-  else if (week[i] == week[i-1]){
+  else if (month[i] == month[i-1]){
     monthly_avg[j] <- monthly_avg[j] + numeric_data[i]
-    #print(monthly_avg[j])
     month_iter <- month_iter + 1
     if (i==length(month)){
       monthly_avg[j] <- monthly_avg[j]/month_iter
-      month_year[j] <- paste0("", week[i], "/", year[i], "")
+      month_year[j] <- paste0("", month[i], "/", year[i], "")
     }
   }
-  #changed to weekly - to change bach to monthly use month[]
-  else if (week[i] != week[i-1]) {
+  else if (month[i] != month[i-1]) {
     monthly_avg[j] <- monthly_avg[j]/month_iter
-    month_year[j] <- paste0("", week[i-1], "/", year[i-1], "")
+    month_year[j] <- paste0("", month[i-1], "/", year[i-1], "")
     month_iter <- 1
     j <- j+1
-    print(j)
     monthly_avg[j] <- numeric_data[i]
   }
   
 }
-week[529] <- '48/2013'
 
 
 
