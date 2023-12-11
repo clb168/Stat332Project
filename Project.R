@@ -5,19 +5,11 @@ library(lubridate)
 library(tseries)
 library(forecast)
 
-# montly opening average
-
-# plot the time series
-# decomposition of time series
-# ACF and PCF
-# decide what kind of model is suitable for our data
-# test hypotheses to validate stationarity, estimate model parameters
-
-#montly averages
+#monthly averages
 my_data <- read.csv("SBUX.csv")
 Open_ts <- ts(my_data[, 1], frequency = 1)
 
-monthly_avg <- array(0, dim = c(529))
+monthly_avg <- array(0, dim = c(120))
 month <- month(mdy(my_data[, 1]))
 # Extract the 4th column
 column_data <- my_data[, 4]
@@ -34,7 +26,6 @@ for (i in 1:length(month)){
   if (i==1){
     monthly_avg[j] <- numeric_data[1]
   }
-  #changing this to weekly - to change back to monthly just use month[] instead of week[]
   else if (month[i] == month[i-1]){
     monthly_avg[j] <- monthly_avg[j] + numeric_data[i]
     month_iter <- month_iter + 1
@@ -50,15 +41,8 @@ for (i in 1:length(month)){
     j <- j+1
     monthly_avg[j] <- numeric_data[i]
   }
-  
 }
 
-
-
-print(monthly_avg)
-print(month_year)
-
- 
 month_yearRev <- rev(month_year)
 month_avgRev <- rev(monthly_avg)
 my_dataframe <- data.frame(Time = month_yearRev, Value = month_avgRev)
@@ -68,13 +52,6 @@ tsPlot <- ts(my_dataframe[,2], frequency = 12)
 plot(tsPlot)
 decomp <- decompose(tsPlot, type=c("multiplicative"))
 plot(decomp)
-
-#training_set <- my_dataframe[1:100, ]  # First 100 rows for training
-#testing_set <- my_dataframe[101:120, ]
-
-#print(training_set)
-#print(testing_set)
-
 
 #ACF and PACF of Time Series
 acf(tsPlot)
@@ -92,7 +69,6 @@ Box.test(tsPlot,lag=5,type = "Box-Pierce")
 
 #fft stuff and splitting dataset for periodigram
 SBX_seasonal <- as.vector(decomp$seasonal)
-#print(SBX_seasonal)
 
 train <- SBX_seasonal[1:370]
 test <- SBX_seasonal[371:529]
@@ -105,7 +81,7 @@ require(LSTS)
 TrainPgram <- LSTS::periodogram(Training)
 TrainPgram$plot
 
-# which ARIMA plot should we use?
+# use auto ARIMA to figure out which ARIMA to use.
 result <- auto.arima(month_avgRev,seasonal= TRUE)
 print(result)
 #ARIMA (0,1,1 plot)
@@ -116,16 +92,12 @@ arima2<-arima(month_avgRev, order=c(0,1,1), seasonal=c(0,1,1))
 checkresiduals(arima2)
 plot(forecast(arima2,h=20))
 
-
-######### Gage stuff
-#Stationarity Test
+# Stationary Test
 adf.test(my_data$Open)
 
-
-#Trend Dcmp
+#Trend Decomposition
 data_seasonal = as.vector(decomp$seasonal)
 data_trend = as.vector(decomp$trend)
-
 
 #Training and Testing Sets
 ntraining_set <- my_dataframe[21:120, ] 
