@@ -6,8 +6,8 @@ library(tseries)
 library(forecast)
 
 #monthly averages
-#my_data <- read.csv("SBUX.csv")
-my_data <- read.csv("/Users/cburh/Documents/Assignments_Fall2023/Stat_332/Project/SBUX.csv")
+my_data <- read.csv("SBUX.csv")
+#my_data <- read.csv("/Users/cburh/Documents/Assignments_Fall2023/Stat_332/Project/SBUX.csv")
 Open_ts <- ts(my_data[, 1], frequency = 1)
 
 monthly_avg <- array(0, dim = c(120))
@@ -98,11 +98,33 @@ TrainPgram$plot
 adftest <- adf.test(month_avgRev)
 print(adftest)
 
-
 #taking difference of data to get stationary
 adftest_diff <- adf.test(diff(month_avgRev))
 print(adftest_diff)
 
+## get best garch
+get.best.garch = function(x.ts, maxord = c(1,1)){
+  best.aic = 1e8
+  n = length(x.ts)
+  for (p in 0:maxord[1]) {
+    for(q in 0:maxord[2]) {
+      if(p+q!=0){
+        fit = garch( x.ts, order = c(p,q) ,trace = F )
+        fit.aic = 2 * fit$n.likeli + (log(fit$n.used) + 1) * length(fit$coef)
+        if (fit.aic < best.aic){
+          best.aic = fit.aic
+          best.fit = fit
+          best.model = c(p,q)
+          best.model.res = resid(fit)[-(1:p)]
+        }
+      }
+    }
+  }
+  list(best.aic, best.fit, best.model,best.model.res)
+}
+
+SBUX_best_garch = get.best.garch(tsPlot, maxord = c(1,2))
+acf(SBUX_best_garch[[4]]^2)
 
 #second order
 # adftest_diff2 <- adf.test(diff(diff(monthly_avg)))
@@ -139,9 +161,6 @@ ntesting_set <- my_dataframe[1:20, ]
 #get best of training
 ts_training <- ts(ntraining_set[,2], frequency = 12)
 get.best.arima(ts_training)
-
-
-
 
 
 
