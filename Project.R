@@ -93,7 +93,8 @@ checkresiduals(arima2)
 plot(forecast(arima2,h=20))
 
 # Stationary Test
-adf.test(my_data$Open)
+adftest <- adf.test(monthly_avg)
+print(adftest)
 
 #Trend Decomposition
 data_seasonal = as.vector(decomp$seasonal)
