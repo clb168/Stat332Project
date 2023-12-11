@@ -6,7 +6,8 @@ library(tseries)
 library(forecast)
 
 #monthly averages
-my_data <- read.csv("SBUX.csv")
+#my_data <- read.csv("SBUX.csv")
+my_data <- read.csv("/Users/cburh/Documents/Assignments_Fall2023/Stat_332/Project/SBUX.csv")
 Open_ts <- ts(my_data[, 1], frequency = 1)
 
 monthly_avg <- array(0, dim = c(120))
@@ -70,8 +71,8 @@ Box.test(tsPlot,lag=5,type = "Box-Pierce")
 #fft stuff and splitting dataset for periodigram
 SBX_seasonal <- as.vector(decomp$seasonal)
 
-train <- SBX_seasonal[1:370]
-test <- SBX_seasonal[371:529]
+train <- SBX_seasonal[1:90]
+test <- SBX_seasonal[91:121]
 print(test)
 print(train)
 
@@ -93,8 +94,26 @@ checkresiduals(arima2)
 plot(forecast(arima2,h=20))
 
 # Stationary Test
-adftest <- adf.test(monthly_avg)
+adftest <- adf.test(month_avgRev)
 print(adftest)
+
+
+#taking difference of data to get stationary
+adftest_diff <- adf.test(diff(month_avgRev))
+print(adftest_diff)
+
+
+#second order
+# adftest_diff2 <- adf.test(diff(diff(monthly_avg)))
+# print(adftest_diff2)
+# 
+# #taking log of data
+# adftest_log <- adf.test(log(monthly_avg))
+# print(adftest_diff2)
+
+
+
+
 
 #Trend Decomposition
 data_seasonal = as.vector(decomp$seasonal)
