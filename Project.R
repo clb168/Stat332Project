@@ -150,8 +150,8 @@ get.best.arima = function(x.ts, maxord = c(1,1,1,1,1,1)){
 get.best.arima(tsPlot)
 
 #splitting into test and training
-ntraining_set <- my_dataframe[21:120, ] 
-ntesting_set <- my_dataframe[1:20, ]
+ntraining_set <- my_dataframe[1:100, ] 
+ntesting_set <- my_dataframe[101:120, ]
 #get best of training
 ts_training <- ts(ntraining_set[,2], frequency = 12)
 get.best.arima(ts_training)
@@ -163,7 +163,10 @@ checkresiduals(arima1)
 # lets do another but with a seasonal model
 arima2<-arima(ts_training, order=c(0,1,1), seasonal=c(0,1,1))
 checkresiduals(arima2)
+#forecast plot - going to overlay the testing set
+ts_testing <-ts(ntesting_set[,2], frequency = 12)
 plot(forecast(arima2,h=20))
+points(tsPlot)
 
 
 
@@ -172,11 +175,5 @@ plot(forecast(arima2,h=20))
 
 
 
-#Trend Decomposition
-data_seasonal = as.vector(decomp$seasonal)
-data_trend = as.vector(decomp$trend)
 
-#Training and Testing Sets
-ntraining_set <- my_dataframe[21:120, ] 
 
-ntesting_set <- my_dataframe[1:20, ]
