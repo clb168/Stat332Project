@@ -157,13 +157,10 @@ get.best.arima <- function(x.ts, maxord = c(1, 1, 1, 1, 1, 1)) {
 get.best.arima(tsPlot)
 
 #splitting into test and training
-<<<<<<< HEAD
+
 ntraining_set <- my_dataframe[1:100, ] 
 ntesting_set <- my_dataframe[101:120, ]
-=======
-ntraining_set <- my_dataframe[21:120,]
-ntesting_set <- my_dataframe[1:20,]
->>>>>>> 60639c07ed52ad54467addb93424e40069dd1263
+
 #get best of training
 ts_training <- ts(ntraining_set[, 2], frequency = 12)
 get.best.arima(ts_training)
@@ -180,23 +177,7 @@ ts_testing <-ts(ntesting_set[,2], frequency = 12)
 plot(forecast(arima2,h=20))
 points(tsPlot)
 
-<<<<<<< HEAD
 
 
 
 
-
-
-
-
-
-=======
-#Trend Decomposition
-data_seasonal <- as.vector(decomp$seasonal)
-data_trend <- as.vector(decomp$trend)
-
-#Training and Testing Sets
-ntraining_set <- my_dataframe[21:120,]
-
-ntesting_set <- my_dataframe[1:20,]
->>>>>>> 60639c07ed52ad54467addb93424e40069dd1263
